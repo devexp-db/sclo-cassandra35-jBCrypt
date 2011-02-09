@@ -1,6 +1,6 @@
 Name:           jBCrypt
 Version:        0.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Strong password hashing for Java
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Tue Jun 22 2010 Sebastian Dziallas <sebastian@when.com> - 0.3-3
 - follow upstream naming for the package
 - add %check section and compile tests
