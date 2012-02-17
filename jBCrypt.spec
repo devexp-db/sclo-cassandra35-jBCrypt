@@ -1,6 +1,6 @@
 Name:           jBCrypt
 Version:        0.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Strong password hashing for Java
 
 Group:          Development/Libraries
@@ -30,7 +30,7 @@ javac BCrypt.java
 jar cvf jBCrypt.jar BCrypt.class
 
 # compile test cases too
-javac -cp %{_javadir}/junit.jar:jBCrypt.jar TestBCrypt.java
+javac -encoding UTF-8 -cp %{_javadir}/junit.jar:jBCrypt.jar TestBCrypt.java
 jar cvf jBCrypt-test.jar TestBCrypt.class
 
 
@@ -55,6 +55,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 17 2012 Deepak Bhole <dbhole@redhat.com> 0.3-6
+- Resolves rhbz#788720
+- Patch from Omair Majid <omajid@redhat.com>:
+  - Fix for building with OpenJDK7 by explicitly specifying the encoding
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
