@@ -1,60 +1,55 @@
 Name:           jBCrypt
 Version:        0.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Strong password hashing for Java
 
-Group:          Development/Libraries
 License:        ISC
 URL:            http://www.mindrot.org/projects/jBCrypt/
-Source0:        http://www.mindrot.org/files/jBCrypt/jBCrypt-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# tarball with pom.xml:
+# svn export http://jbcrypt.googlecode.com/svn/tags/jbcrypt-0.3m jBCrypt-0.3
+# tar czvf jbcrypt-0.3m.tar.gz jBCrypt-0.3
+Source0:        jbcrypt-%{version}m.tar.gz
+Source1:        http://www.mindrot.org/files/%{name}/LICENSE
 BuildArch:      noarch
 
-BuildRequires:  java-devel
-BuildRequires:  jpackage-utils
+BuildRequires:  maven-local
 BuildRequires:  junit
-
-Requires:       java
-Requires:       jpackage-utils  
 
 %description
 A Java implementation of OpenBSD's Blowfish password hashing code. 
 
+%package        javadoc
+Summary:        API documentation for %{name}
+
+%description    javadoc
+This package contains the API documentation for %{name}.
 
 %prep
 %setup -q
 
+cp %{SOURCE1} .
+
+%mvn_file : %{name}/%{name} %{name}
 
 %build
-javac BCrypt.java
-jar cvf jBCrypt.jar BCrypt.class
-
-# compile test cases too
-javac -encoding UTF-8 -cp %{_javadir}/junit.jar:jBCrypt.jar TestBCrypt.java
-jar cvf jBCrypt-test.jar TestBCrypt.class
-
+%mvn_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{_javadir}
-cp jBCrypt.jar $RPM_BUILD_ROOT%{_javadir}/jBCrypt.jar
+%mvn_install
 
+%files -f .mfiles
+%dir %{_javadir}/%{name}
+%doc LICENSE
 
-%check
-java -cp %{_javadir}/junit.jar:jBCrypt.jar:jBCrypt-test.jar TestBCrypt
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
-%files
-%defattr(-,root,root,-)
-%doc LICENSE README
-%{_javadir}/%{name}.jar
-
+%files javadoc -f .mfiles-javadoc
+%doc LICENSE
 
 %changelog
+* Fri Oct 18 2013 Michal Srb <msrb@redhat.com> - 0.3-10
+- Adapt to current packaging guidelines
+- Add javadoc subpackage
+- Build with Maven
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
