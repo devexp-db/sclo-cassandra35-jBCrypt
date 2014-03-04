@@ -1,6 +1,6 @@
 Name:           jBCrypt
 Version:        0.3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Strong password hashing for Java
 
 License:        ISC
@@ -45,6 +45,9 @@ cp %{SOURCE1} .
 %doc LICENSE
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.3-11
+- Use Requires: java-headless rebuild (#1067528)
+
 * Fri Oct 18 2013 Michal Srb <msrb@redhat.com> - 0.3-10
 - Adapt to current packaging guidelines
 - Add javadoc subpackage
