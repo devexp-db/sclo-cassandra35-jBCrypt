@@ -1,19 +1,19 @@
 Name:           jBCrypt
-Version:        0.3
-Release:        12%{?dist}
+Version:        0.4
+Release:        1%{?dist}
 Summary:        Strong password hashing for Java
 
 License:        ISC
-URL:            http://www.mindrot.org/projects/jBCrypt/
-# tarball with pom.xml:
-# svn export http://jbcrypt.googlecode.com/svn/tags/jbcrypt-0.3m jBCrypt-0.3
-# tar czvf jbcrypt-0.3m.tar.gz jBCrypt-0.3
-Source0:        jbcrypt-%{version}m.tar.gz
-Source1:        http://www.mindrot.org/files/%{name}/LICENSE
+URL:            http://www.mindrot.org/projects/jBCrypt
+Source0:        http://www.mindrot.org/files/%{name}/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  maven-local
+BuildRequires:  ant
+BuildRequires:  ant-junit
+BuildRequires:  javapackages-local
 BuildRequires:  junit
+
+Obsoletes:      %{name}-javadoc < %{version}-%{release}
 
 %description
 A Java implementation of OpenBSD's Blowfish password hashing code. 
@@ -27,24 +27,24 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q
 
-cp %{SOURCE1} .
-
 %mvn_file : %{name}/%{name} %{name}
 
 %build
-%mvn_build
+ant test dist
 
 %install
+%mvn_artifact 'org.mindrot:jbcrypt:0.4' jbcrypt.jar
 %mvn_install
 
 %files -f .mfiles
 %dir %{_javadir}/%{name}
 %doc LICENSE
 
-%files javadoc -f .mfiles-javadoc
-%doc LICENSE
-
 %changelog
+* Mon Mar 02 2015 Michal Srb <msrb@redhat.com> - 0.4-1
+- Update to upstream version 0.4
+- Resolves: CVE-2015-0886
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
