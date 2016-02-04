@@ -1,6 +1,6 @@
 Name:           jBCrypt
 Version:        0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Strong password hashing for Java
 
 License:        ISC
@@ -41,6 +41,9 @@ ant test dist
 %doc LICENSE
 
 %changelog
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
