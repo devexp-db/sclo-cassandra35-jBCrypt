@@ -1,43 +1,73 @@
-Name:           jBCrypt
-Version:        0.4
-Release:        3%{?dist}
-Summary:        Strong password hashing for Java
+%{?scl:%scl_package jBCrypt}
+%{!?scl:%global pkg_name %{name}}
 
-License:        ISC
-URL:            http://www.mindrot.org/projects/jBCrypt
-Source0:        http://www.mindrot.org/files/%{name}/%{name}-%{version}.tar.gz
-BuildArch:      noarch
+%{?scl:%global mvn_scl    rh-maven33}
+%{?scl:%global java_scl   rh-java-common}
+%{?scl:%global build_scls %java_scl %mvn_scl %scl}
 
-BuildRequires:  ant
-BuildRequires:  ant-junit
-BuildRequires:  javapackages-local
-BuildRequires:  junit
+%{?scl:
+%global scl_enable() \
+        scl enable %** - <<'_SCL_EOF' \
+        set -x
+%global scl_disable() _SCL_EOF
+}
 
-Obsoletes:      %{name}-javadoc < %{version}-%{release}
+Name:          %{?scl_prefix}jBCrypt
+Version:       0.4
+Release:       3%{?dist}
+Summary:       Strong password hashing for Java
+
+License:       ISC
+URL:           http://www.mindrot.org/projects/%{pkg_name}
+Source0:       http://www.mindrot.org/files/%{pkg_name}/%{pkg_name}-%{version}.tar.gz
+
+BuildRequires: %{?scl:%java_scl-}ant
+BuildRequires: %{?scl:%java_scl-}ant-junit
+BuildRequires: %{?scl:%java_scl-}javapackages-local
+BuildRequires: %{?scl:%java_scl-}junit
+%{?scl:BuildRequires: %scl_name-build}
+%{?scl:Requires: %scl_runtime}
+
+%if ! 0%{?rhel}
+# no bash-completion for RHEL
+%global bash_completion 1
+%endif
+
+%if 0%{?bash_completion}
+BuildRequires: bash-completion pkgconfig
+%endif
+
+BuildArch:     noarch
 
 %description
 A Java implementation of OpenBSD's Blowfish password hashing code. 
 
-%package        javadoc
-Summary:        API documentation for %{name}
+%package       javadoc
+Summary:       API documentation for %{name}
 
-%description    javadoc
+%description   javadoc
 This package contains the API documentation for %{name}.
 
 %prep
-%setup -q
+%{?scl:%scl_enable %build_scls}
+%setup -q -n %{pkg_name}-%{version}
 
-%mvn_file : %{name}/%{name} %{name}
+%mvn_file : %{pkg_name}/%{pkg_name} %{pkg_name}
+%{?scl:%scl_disable}
 
 %build
+%{?scl:%scl_enable  %build_scls}
 ant test dist
+%{?scl:%scl_disable}
 
 %install
+%{?scl:%scl_enable  %build_scls}
 %mvn_artifact 'org.mindrot:jbcrypt:0.4' jbcrypt.jar
 %mvn_install
+%{?scl:%scl_disable}
 
 %files -f .mfiles
-%dir %{_javadir}/%{name}
+%dir %{_javadir}/%{pkg_name}
 %doc LICENSE
 
 %changelog
