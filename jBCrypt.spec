@@ -1,53 +1,55 @@
 %{?scl:%scl_package jBCrypt}
 %{!?scl:%global pkg_name %{name}}
 
-Name:          %{?scl_prefix}jBCrypt
-Version:       0.4
-Release:       1%{?dist}
-Summary:       Strong password hashing for Java
+Name:		%{?scl_prefix}jBCrypt
+Version:	0.4
+Release:	2%{?dist}
+Summary:	Strong password hashing for Java
+License:	ISC
+URL:		http://www.mindrot.org/projects/%{pkg_name}
+Source0:	http://www.mindrot.org/files/%{pkg_name}/%{pkg_name}-%{version}.tar.gz
 
-License:       ISC
-URL:           http://www.mindrot.org/projects/%{pkg_name}
-Source0:       http://www.mindrot.org/files/%{pkg_name}/%{pkg_name}-%{version}.tar.gz
-
-BuildRequires: %{?scl_java_prefix}ant
-BuildRequires: %{?scl_java_prefix}ant-junit
-BuildRequires: %{?scl_java_prefix}javapackages-local
-BuildRequires: %{?scl_java_prefix}junit
+BuildRequires:	%{?scl_prefix_java_common}ant
+BuildRequires:	%{?scl_prefix_java_common}ant-junit
+BuildRequires:	%{?scl_prefix_java_common}javapackages-local
+BuildRequires:	%{?scl_prefix_java_common}junit
 %{?scl:Requires: %scl_runtime}
 
-BuildArch:     noarch
+BuildArch:	noarch
 
 %description
 A Java implementation of OpenBSD's Blowfish password hashing code. 
 
-%package       javadoc
-Summary:       API documentation for %{name}
+%package javadoc
+Summary:	API documentation for %{name}
 
-%description   javadoc
+%description javadoc
 This package contains the API documentation for %{name}.
 
 %prep
-%{?scl_enable}
 %setup -q -n %{pkg_name}-%{version}
 
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
 %mvn_file : %{pkg_name}/%{pkg_name} %{pkg_name}
-%{?scl_disable}
+%{?scl:EOF}
 
 %build
-%{?scl_enable}
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
 ant test dist
-%{?scl_disable}
+%{?scl:EOF}
 
 %install
-%{?scl_enable}
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
 %mvn_artifact 'org.mindrot:jbcrypt:0.4' jbcrypt.jar
 %mvn_install
-%{?scl_disable}
+%{?scl:EOF}
 
 %files -f .mfiles
 %doc LICENSE
 
 %changelog
+* Wed Oct 12 2016 Tomas Repik <trepik@redhat.com> - 0.4-2
+- use standard SCL macros
+
 * Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 0.4-1
 - basic scl movement
